@@ -4,46 +4,52 @@
 #include <string.h>
 
 /**
- * tokens - splits a string and returns an array of each 
+ * tokens - splits a string and returns an array of each
  * token/word of the string
  * @text - string to tokenize
  * @delim - delimiter(s) - only first delimiter is considered
  * @count - buffer to hold number of tokens returned by
  * function
  *
- * Return:  array of strings/tokens
+ * Return:  array of strings/tokens. Free allocated memory after use!
  */
 
 char **tokens(char *text, const char *delim, int *count)
 {
 
-	char **words;
-	int i;
-	int count_delim = 1;
-	
-	/*Estimate the number of tokens in view*/
-	i = 0;
-	while (text[i])
-	{
-		if (text[i] == delim[0])
-			count_delim++;
-		i++;
-	}
+        char **words;
+        int i;
+        int count_delim = 1;
 
-	/*Allocate memory based on tokens in view*/
-	words = malloc(sizeof(char *) * count_delim);
+        /*Estimate the number of tokens in view*/
+        i = 0;
+        while (text[i])
+        {
+                if (text[i] == delim[0])
+                        count_delim++;
+                i++;
+        }
 
-	/*Tokenize string and store in reserved array*/
-	words[0] = strtok(text, delim);
-	
-	for (i = 1; i < count_delim; i++)
-	{
-		words[i] = strtok(NULL, delim);
-	}
+        /*Allocate memory based on tokens in view*/
+        words = malloc(sizeof(char *) * count_delim);
 
-	/*Return every update*/
-	*count = count_delim;
-	return (words);
+        /*Verify malloc was successful*/
+        if (words == NULL)
+        {
+                printf("Malloc Failed!\n");
+                exit(99);
+        }
+
+        /*Tokenize string and store in reserved array*/
+        words[0] = strtok(text, delim);
+        for (i = 1; i < count_delim; i++)
+        {
+                words[i] = strtok(NULL, delim);
+        }
+
+        /*Return every update*/
+        *count = count_delim;
+        return (words);
 }
 
 int main(void)
@@ -63,18 +69,8 @@ int main(void)
 		printf("argument %i: %s\n", i, words[i]);
 	}
 
+	/*Free allocated memories*/
+	free(words);
 	return (0);
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
