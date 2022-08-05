@@ -4,7 +4,7 @@
 #include <string.h>
 
 /**
- * tokens - splits a string and returns an array of each
+ * tokenize - splits a string and returns an array of each
  * token/word of the string
  * @text - string to tokenize
  * @delim - delimiter(s) - can handle multiple delimiters
@@ -14,7 +14,7 @@
  * Return:  array of strings/tokens. Free allocated memory after use!
  */
 
-char **tokens(char *text, const char *delim, int *count)
+char **tokenize(char *text, const char *delim, int *count)
 {
 
         char **words;
@@ -74,7 +74,7 @@ int main(void)
 	int count = 0;
 
 	/*Call to tokens*/
-	words = tokens(text, delim, &count);
+	words = tokenize(text, delim, &count);
 	
 	/*Print all tokens/words acquired*/
 	for (i = 0; i < count; i++)
