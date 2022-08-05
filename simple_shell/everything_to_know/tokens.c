@@ -7,7 +7,7 @@
  * tokens - splits a string and returns an array of each
  * token/word of the string
  * @text - string to tokenize
- * @delim - delimiter(s) - only first delimiter is considered
+ * @delim - delimiter(s) - can handle multiple delimiters
  * @count - buffer to hold number of tokens returned by
  * function
  *
@@ -19,14 +19,18 @@ char **tokens(char *text, const char *delim, int *count)
 
         char **words;
         int i;
+	int j;
         int count_delim = 1;
 
         /*Estimate the number of tokens in view*/
         i = 0;
         while (text[i])
         {
-                if (text[i] == delim[0])
-                        count_delim++;
+                for (j = 0; delim[j] != '\0'; j++)
+		{
+			if (text[i] == delim[j])
+                        	count_delim++;
+		}
                 i++;
         }
 
@@ -47,14 +51,23 @@ char **tokens(char *text, const char *delim, int *count)
                 words[i] = strtok(NULL, delim);
         }
 
+	/*Count tokens stored*/
+	i = 0;
+	count_delim = 0;
+	while (words[i] != NULL)
+	{
+		count_delim++;
+		i++;
+	}
+
         /*Return every update*/
-        *count = count_delim;
+        *count = count_delim - 1;
         return (words);
 }
 
 int main(void)
 {
-	char text[] = "This is the place where PLD TEAM MATES test their function";
+	char text[] = "One two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen";
 	char **words;
 	const char *delim = " ";
 	int i = 0;
