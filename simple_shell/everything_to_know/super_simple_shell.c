@@ -21,15 +21,21 @@ int main(int ac, char *av[])
 	pid_t pid;
 	int status;
 	int loop = 1;
+	int interactv;
+
+	/*Interactive or non-interactive*/
+	interactv = isatty(0);
 
 	while (loop)
 	{
 		/*Prompter*/
-		write(1, "#cisfun$ ", 9);
+		if (interactv)
+			write(1, "#cisfun$ ", 9);
 
 		/*Get user input*/
 		n_read = getline(&lineptr, &n, stdin);
-		lineptr[n_read - 1] = '\0';
+		if (n_read != -1)
+			lineptr[n_read - 1] = '\0';
 
 		/*Tokenize user input*/
 		words = tokenize(lineptr, delim, &count);
@@ -38,7 +44,7 @@ int main(int ac, char *av[])
 		pid = fork();
 		if (pid == -1)
 		{
-			perror("Error");
+			perror("fork");
 			free(lineptr);
 			exit(EXIT_FAILURE);
 		}
@@ -48,13 +54,15 @@ int main(int ac, char *av[])
 			/*Execute the given input/command*/
 			if (execve(words[0], &words[0], NULL) == -1)
 			{
-				perror("Error");
+				perror("execve");
 				free(lineptr);
 				exit(EXIT_FAILURE);
 			}
 		}
 		else
 			wait(&status);
+		
+		loop = interactv;
 	}
 
 	free(lineptr);
